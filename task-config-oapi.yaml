@@ -1,0 +1,161 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Web Runner Configurer
+  description: A CRUD API that configurate tasks activate by web url
+  contact:
+    name: Eugeny Birukov
+    email: ebirukov@perfectplaystudio.com
+servers:
+  - url: http://localhost:8080
+paths:
+  /configs:
+    get:
+      operationId: findTaskConfigs
+      parameters:
+        - name: urlPath
+          in: query
+          description: url path to filter by
+          required: false
+          style: form
+          schema:
+            type: array
+            items:
+              type: string
+        - name: limit
+          in: query
+          description: maximum number of results to return
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: list of task config response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TaskConfig'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationError'
+    post:
+      description: Add a new task config to database
+      operationId: addTaskConfig
+      requestBody:
+        description: Task config to add to database
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewConfig'
+      responses:
+        '200':
+          description: task config response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskConfig'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationError'
+  /configs/{id}:
+    get:
+      description: Return a task configuration by id
+      operationId: findTaskConfigById
+      parameters:
+        - name: id
+          in: path
+          description: id of task config to fetch
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: task config response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskConfig'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationError'
+    delete:
+      description: deletes a task configuration by Id
+      operationId: deleteTaskConfig
+      parameters:
+        - name: id
+          in: path
+          description: id of task config to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: task config deleted
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationError'
+components:
+  schemas:
+    TaskConfig:
+      allOf:
+        - $ref: '#/components/schemas/NewConfig'
+        - type: object
+          required:
+            - id
+          properties:
+            id:
+              type: integer
+              format: int64
+
+    NewConfig:
+      type: object
+      required:
+        - urlPath
+        - taskDef
+        - container
+        - scriptPath
+      properties:
+        urlPath:
+          type: string
+        taskDef:
+          type: string
+        container:
+          type: string
+        category:
+          type: string
+        scriptPath:
+          type: string
+        cluster:
+          type: string
+        desc:
+          type: string
+
+    OperationError:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
