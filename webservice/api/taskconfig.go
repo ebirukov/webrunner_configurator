@@ -7,15 +7,14 @@ import (
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"net/http"
-	"sync"
 )
 
 type CRUDHandler struct {
-	Lock sync.Mutex
+	repository TaskConfigRepository
 }
 
-func NewCRUDHandler() *CRUDHandler {
-	return &CRUDHandler{}
+func NewCRUDHandler(repository TaskConfigRepository) *CRUDHandler {
+	return &CRUDHandler{repository: repository}
 }
 
 func sendError(ctx echo.Context, code int, message string) error {
@@ -33,13 +32,17 @@ func (h *CRUDHandler) DeleteTaskConfig(ctx echo.Context, id int64) (err error) {
 }
 
 func (h *CRUDHandler) FindTaskConfigById(ctx echo.Context, id int64) (err error) {
+
 	return sendError(ctx, http.StatusNotFound,
 		fmt.Sprintf("Could not find task config with ID %d", id))
 }
 
 func (h *CRUDHandler) FindTaskConfigs(ctx echo.Context, params FindTaskConfigsParams) error {
-
-	return ctx.JSON(http.StatusOK, params.UrlPath)
+	tasks, err := h.repository.List()
+	if err != nil {
+		return sendError(ctx, http.StatusInternalServerError, err.Error())
+	}
+	return ctx.JSON(http.StatusOK, tasks)
 }
 
 func (h *CRUDHandler) AddTaskConfig(ctx echo.Context) error {
