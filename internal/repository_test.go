@@ -1,4 +1,4 @@
-package api
+package internal
 
 import (
 	"database/sql"
@@ -9,7 +9,7 @@ import (
 	"gopkg.in/DATA-DOG/go-sqlmock.v1"
 	"regexp"
 	"testing"
-	"webrunner_configurator/internal/api/gen/model"
+	"webrunner_configurator/internal/gen/model"
 )
 
 type Suite struct {

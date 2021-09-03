@@ -7,8 +7,8 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"os"
-	"webrunner_configurator/internal/api"
-	"webrunner_configurator/internal/api/gen/server"
+	api "webrunner_configurator/internal"
+	"webrunner_configurator/internal/gen/server"
 )
 
 func main() {

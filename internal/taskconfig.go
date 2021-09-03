@@ -1,13 +1,13 @@
-//go:generate go run github.com/deepmap/oapi-codegen/cmd/oapi-codegen --config=conf/types.cfg.yaml ../../task-config-oapi.yaml
-//go:generate go run github.com/deepmap/oapi-codegen/cmd/oapi-codegen --config=conf/server.cfg.yaml ../../task-config-oapi.yaml
+//go:generate go run github.com/deepmap/oapi-codegen/cmd/oapi-codegen --config=conf/types.cfg.yaml ../task-config-oapi.yaml
+//go:generate go run github.com/deepmap/oapi-codegen/cmd/oapi-codegen --config=conf/server.cfg.yaml ../task-config-oapi.yaml
 
-package api
+package internal
 
 import (
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"net/http"
-	"webrunner_configurator/internal/api/gen/model"
+	"webrunner_configurator/internal/gen/model"
 )
 
 type CRUDHandler struct {

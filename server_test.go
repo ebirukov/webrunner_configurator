@@ -11,8 +11,8 @@ import (
 	"net/http"
 	"regexp"
 	"testing"
-	"webrunner_configurator/internal/api" //inline
-	"webrunner_configurator/internal/api/gen/server"
+	api2 "webrunner_configurator/internal"
+	"webrunner_configurator/internal/gen/server"
 )
 
 func TestCRUDHandler(t *testing.T) {
@@ -24,8 +24,8 @@ func TestCRUDHandler(t *testing.T) {
 	connector.LogMode(true)
 	require.NoError(t, err)
 
-	dbRepository := api.NewDBTaskConfig(connector)
-	handler := api.NewCRUDHandler(dbRepository)
+	dbRepository := api2.NewDBTaskConfig(connector)
+	handler := api2.NewCRUDHandler(dbRepository)
 
 	require.NoError(t, err)
 	e.Use(middleware.Logger())

@@ -1,8 +1,8 @@
-package api
+package internal
 
 import (
 	"github.com/jinzhu/gorm"
-	"webrunner_configurator/internal/api/gen/model"
+	"webrunner_configurator/internal/gen/model"
 )
 
 type TaskConfigRepository interface {
