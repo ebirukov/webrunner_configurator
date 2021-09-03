@@ -1,0 +1,5 @@
+output:
+  gen/model/taskconfig-types.gen.go
+generate:
+  - types
+package: model

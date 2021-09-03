@@ -9,6 +9,7 @@ import (
 	"gopkg.in/DATA-DOG/go-sqlmock.v1"
 	"regexp"
 	"testing"
+	"webrunner_configurator/internal/api/gen/model"
 )
 
 type Suite struct {
@@ -17,7 +18,7 @@ type Suite struct {
 	mock sqlmock.Sqlmock
 
 	repository TaskConfigRepository
-	config     *NewConfig
+	config     *model.NewConfig
 }
 
 func (s *Suite) SetupSuite() {
@@ -48,7 +49,7 @@ func TestInit(t *testing.T) {
 func (s *Suite) Test_repository_Get() {
 	var (
 		id   = int64(1)
-		name = NewConfig{}
+		name = model.NewConfig{}
 	)
 
 	s.mock.ExpectQuery(regexp.QuoteMeta(
@@ -60,8 +61,8 @@ func (s *Suite) Test_repository_Get() {
 	res, err := s.repository.Get(id)
 
 	require.NoError(s.T(), err)
-	require.Nil(s.T(), deep.Equal(&TaskConfig{
-		NewConfig: NewConfig{},
+	require.Nil(s.T(), deep.Equal(&model.TaskConfig{
+		NewConfig: model.NewConfig{},
 		Id:        1,
 	}, res))
 }

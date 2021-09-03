@@ -12,23 +12,6 @@ paths:
   /configs:
     get:
       operationId: findTaskConfigs
-      parameters:
-        - name: urlPath
-          in: query
-          description: url path to filter by
-          required: false
-          style: form
-          schema:
-            type: array
-            items:
-              type: string
-        - name: limit
-          in: query
-          description: maximum number of results to return
-          required: false
-          schema:
-            type: integer
-            format: int32
       responses:
         '200':
           description: list of task config response

@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"net/http"
+	"webrunner_configurator/internal/api/gen/model"
 )
 
 type CRUDHandler struct {
@@ -18,7 +19,7 @@ func NewCRUDHandler(repository TaskConfigRepository) *CRUDHandler {
 }
 
 func sendError(ctx echo.Context, code int, message string) error {
-	opErr := OperationError{
+	opErr := model.OperationError{
 		Code:    int32(code),
 		Message: message,
 	}
@@ -37,7 +38,7 @@ func (h *CRUDHandler) FindTaskConfigById(ctx echo.Context, id int64) (err error)
 		fmt.Sprintf("Could not find task config with ID %d", id))
 }
 
-func (h *CRUDHandler) FindTaskConfigs(ctx echo.Context, params FindTaskConfigsParams) error {
+func (h *CRUDHandler) FindTaskConfigs(ctx echo.Context) error {
 	tasks, err := h.repository.List()
 	if err != nil {
 		return sendError(ctx, http.StatusInternalServerError, err.Error())

@@ -1,0 +1,6 @@
+output:
+  gen/server/taskconfig-server.gen.go
+generate:
+  - server
+  - spec
+package: server

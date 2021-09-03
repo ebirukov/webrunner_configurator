@@ -11,7 +11,8 @@ import (
 	"net/http"
 	"regexp"
 	"testing"
-	"webrunner_configurator/webservice/api" //inline
+	"webrunner_configurator/internal/api" //inline
+	"webrunner_configurator/internal/api/gen/server"
 )
 
 func TestCRUDHandler(t *testing.T) {
@@ -28,7 +29,7 @@ func TestCRUDHandler(t *testing.T) {
 
 	require.NoError(t, err)
 	e.Use(middleware.Logger())
-	api.RegisterHandlers(e, handler)
+	server.RegisterHandlers(e, handler)
 
 	mock.ExpectQuery(regexp.QuoteMeta("SELECT * FROM `task_configs`")).WillReturnRows(sqlmock.NewRows([]string{}))
 	result := testutil.NewRequest().Get("/configs").Go(t, e)

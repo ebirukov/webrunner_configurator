@@ -7,7 +7,8 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"os"
-	"webrunner_configurator/webservice/api"
+	"webrunner_configurator/internal/api"
+	"webrunner_configurator/internal/api/gen/server"
 )
 
 func main() {
@@ -30,7 +31,7 @@ func main() {
 
 	dbRepository := api.NewDBTaskConfig(db)
 	handler := api.NewCRUDHandler(dbRepository)
-	api.RegisterHandlers(e, handler)
+	server.RegisterHandlers(e, handler)
 
 	err = e.Start(fmt.Sprintf("0.0.0.0:%d", *port))
 	if err != nil {

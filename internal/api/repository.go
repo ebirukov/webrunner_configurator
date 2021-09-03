@@ -2,13 +2,14 @@ package api
 
 import (
 	"github.com/jinzhu/gorm"
+	"webrunner_configurator/internal/api/gen/model"
 )
 
 type TaskConfigRepository interface {
-	Create(config NewConfig) (int64, error)
-	Get(id int64) (*TaskConfig, error)
-	List() ([]TaskConfig, error)
-	Update(config TaskConfig)
+	Create(config model.NewConfig) (int64, error)
+	Get(id int64) (*model.TaskConfig, error)
+	List() ([]model.TaskConfig, error)
+	Update(config model.TaskConfig)
 	Delete(id int64) error
 }
 
@@ -16,12 +17,12 @@ type DBTaskConfig struct {
 	Connector *gorm.DB
 }
 
-func (db *DBTaskConfig) Create(config NewConfig) (int64, error) {
+func (db *DBTaskConfig) Create(config model.NewConfig) (int64, error) {
 	panic("implement me")
 }
 
-func (db *DBTaskConfig) Get(id int64) (*TaskConfig, error) {
-	taskConfig := new(TaskConfig)
+func (db *DBTaskConfig) Get(id int64) (*model.TaskConfig, error) {
+	taskConfig := new(model.TaskConfig)
 	res := db.Connector.Where("id = ?", id).Find(taskConfig)
 	if res.Error != nil {
 		return nil, res.Error
@@ -30,8 +31,8 @@ func (db *DBTaskConfig) Get(id int64) (*TaskConfig, error) {
 	}
 }
 
-func (db *DBTaskConfig) List() ([]TaskConfig, error) {
-	var configs []TaskConfig
+func (db *DBTaskConfig) List() ([]model.TaskConfig, error) {
+	var configs []model.TaskConfig
 	res := db.Connector.Find(&configs)
 	if res.Error != nil {
 		return nil, res.Error
@@ -40,7 +41,7 @@ func (db *DBTaskConfig) List() ([]TaskConfig, error) {
 	}
 }
 
-func (db *DBTaskConfig) Update(config TaskConfig) {
+func (db *DBTaskConfig) Update(config model.TaskConfig) {
 	panic("implement me")
 }
 

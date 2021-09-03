@@ -1,5 +1,0 @@
-output:
-  taskconfig-types.gen.go
-generate:
-  - types
-package: api
