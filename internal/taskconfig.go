@@ -8,13 +8,14 @@ import (
 	"github.com/labstack/echo/v4"
 	"net/http"
 	"webrunner_configurator/internal/gen/model"
+	"webrunner_configurator/internal/repository"
 )
 
 type CRUDHandler struct {
-	repository TaskConfigRepository
+	repository repository.TaskConfigRepository
 }
 
-func NewCRUDHandler(repository TaskConfigRepository) *CRUDHandler {
+func NewCRUDHandler(repository repository.TaskConfigRepository) *CRUDHandler {
 	return &CRUDHandler{repository: repository}
 }
 

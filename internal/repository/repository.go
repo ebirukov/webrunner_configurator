@@ -1,17 +1,9 @@
-package internal
+package repository
 
 import (
 	"github.com/jinzhu/gorm"
 	"webrunner_configurator/internal/gen/model"
 )
-
-type TaskConfigRepository interface {
-	Create(config model.NewConfig) (int64, error)
-	Get(id int64) (*model.TaskConfig, error)
-	List() ([]model.TaskConfig, error)
-	Update(config model.TaskConfig)
-	Delete(id int64) error
-}
 
 type DBTaskConfig struct {
 	Connector *gorm.DB

@@ -13,6 +13,7 @@ import (
 	"testing"
 	api2 "webrunner_configurator/internal"
 	"webrunner_configurator/internal/gen/server"
+	"webrunner_configurator/internal/repository"
 )
 
 func TestCRUDHandler(t *testing.T) {
@@ -24,7 +25,7 @@ func TestCRUDHandler(t *testing.T) {
 	connector.LogMode(true)
 	require.NoError(t, err)
 
-	dbRepository := api2.NewDBTaskConfig(connector)
+	dbRepository := repository.NewDBTaskConfig(connector)
 	handler := api2.NewCRUDHandler(dbRepository)
 
 	require.NoError(t, err)
