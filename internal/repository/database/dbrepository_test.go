@@ -1,4 +1,4 @@
-package repository
+package database
 
 import (
 	"database/sql"
@@ -10,6 +10,7 @@ import (
 	"regexp"
 	"testing"
 	"webrunner_configurator/internal/gen/model"
+	repository2 "webrunner_configurator/internal/repository"
 )
 
 type Suite struct {
@@ -17,7 +18,7 @@ type Suite struct {
 	DB   *gorm.DB
 	mock sqlmock.Sqlmock
 
-	repository TaskConfigRepository
+	repository repository2.TaskConfigRepository
 	config     *model.NewConfig
 }
 
