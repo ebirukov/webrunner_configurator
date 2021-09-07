@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"webrunner_configurator/internal/gen/model"
 	"webrunner_configurator/internal/repository"
+	"webrunner_configurator/internal/repository/simple"
 )
 
 type CRUDHandler struct {
@@ -29,14 +30,21 @@ func sendError(ctx echo.Context, code int, message string) error {
 }
 
 func (h *CRUDHandler) DeleteTaskConfig(ctx echo.Context, id int64) (err error) {
-	return sendError(ctx, http.StatusNotFound,
-		fmt.Sprintf("Could not delete task config with ID %d", id))
+	err = h.repository.Delete(id)
+	if err == simple.TaskConfigNotFound {
+		return sendError(ctx, http.StatusNotFound,
+			fmt.Sprintf("Could not find task config with ID %d", id))
+	}
+	return ctx.NoContent(http.StatusNoContent)
 }
 
-func (h *CRUDHandler) FindTaskConfigById(ctx echo.Context, id int64) (err error) {
-
-	return sendError(ctx, http.StatusNotFound,
-		fmt.Sprintf("Could not find task config with ID %d", id))
+func (h *CRUDHandler) FindTaskConfigById(ctx echo.Context, id int64) error {
+	taskConfig, err := h.repository.Get(id)
+	if err == simple.TaskConfigNotFound {
+		return sendError(ctx, http.StatusNotFound,
+			fmt.Sprintf("Could not find task config with ID %d", id))
+	}
+	return ctx.JSON(http.StatusOK, taskConfig)
 }
 
 func (h *CRUDHandler) FindTaskConfigs(ctx echo.Context) error {
@@ -47,8 +55,19 @@ func (h *CRUDHandler) FindTaskConfigs(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, tasks)
 }
 
-func (h *CRUDHandler) AddTaskConfig(ctx echo.Context) error {
-	//panic("implement me")
-	err := ctx.String(http.StatusCreated, "created")
-	return err
+func (h *CRUDHandler) AddTaskConfig(ctx echo.Context) (err error) {
+	var (
+		newConfig model.NewConfig
+		id        int64
+	)
+	err = ctx.Bind(&newConfig)
+	if err != nil {
+		return sendError(ctx, http.StatusBadRequest, "Invalid format for NewConfig")
+	}
+	id, err = h.repository.Create(newConfig)
+	if err != nil {
+		return sendError(ctx, http.StatusInternalServerError, err.Error())
+	}
+	err = ctx.JSON(http.StatusCreated, model.TaskConfig{NewConfig: newConfig, Id: id})
+	return nil
 }

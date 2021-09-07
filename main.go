@@ -7,13 +7,13 @@ import (
 	"os"
 	controller "webrunner_configurator/internal"
 	"webrunner_configurator/internal/gen/server"
-	db "webrunner_configurator/internal/repository/database/postgres"
+	"webrunner_configurator/internal/repository/simple"
 )
 
 func main() {
 	config := controller.NewCommandlineConfig()
-	repoBuilder := db.NewBuilder(config.DBConfig)
-	//repoBuilder := simple.NewBuilder()
+	//repoBuilder := db.NewBuilder(config.DBConfig)
+	repoBuilder := simple.NewBuilder()
 
 	e := echo.New()
 	e.Use(middleware.Logger())
