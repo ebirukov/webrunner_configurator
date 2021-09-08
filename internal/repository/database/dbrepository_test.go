@@ -40,11 +40,38 @@ func (s *Suite) SetupSuite() {
 }
 
 func (s *Suite) AfterTest(_, _ string) {
-	require.NoError(s.T(), s.mock.ExpectationsWereMet())
+	//	require.NoError(s.T(), s.mock.ExpectationsWereMet())
 }
 
 func TestInit(t *testing.T) {
 	suite.Run(t, new(Suite))
+}
+
+func (s *Suite) Test_repository_Update() {
+	var (
+		config = model.NewConfig{}
+		id     = int64(1)
+	)
+	s.mock.ExpectBegin()
+	s.mock.ExpectExec(
+		"UPDATE `restconf` SET").
+		WillReturnResult(sqlmock.NewResult(1, 1))
+	s.mock.ExpectCommit()
+	_, err := s.repository.Update(config, id)
+	require.NoError(s.T(), err)
+}
+
+func (s *Suite) Test_repository_Create() {
+	var (
+		config = model.NewConfig{}
+	)
+	s.mock.ExpectBegin()
+	s.mock.ExpectExec(
+		"INSERT INTO `restconf`").
+		WillReturnResult(sqlmock.NewResult(1, 1))
+	s.mock.ExpectCommit()
+	_, err := s.repository.Create(config)
+	require.NoError(s.T(), err)
 }
 
 func (s *Suite) Test_repository_Get() {
@@ -54,7 +81,7 @@ func (s *Suite) Test_repository_Get() {
 	)
 
 	s.mock.ExpectQuery(regexp.QuoteMeta(
-		"SELECT * FROM `task_configs` WHERE (id = ?)")).
+		"SELECT * FROM `restconf` WHERE (id = ?)")).
 		WithArgs(id).
 		WillReturnRows(sqlmock.NewRows([]string{"id", "newConfig"}).
 			AddRow(id, name))
@@ -66,4 +93,18 @@ func (s *Suite) Test_repository_Get() {
 		NewConfig: model.NewConfig{},
 		Id:        1,
 	}, res))
+}
+
+func (s *Suite) Test_repository_Delete() {
+	var (
+		id = int64(1)
+		//name = model.NewConfig{}
+	)
+	s.mock.ExpectBegin()
+	s.mock.ExpectExec(
+		"DELETE FROM `restconf` WHERE").WillReturnResult(sqlmock.NewResult(1, 1))
+	s.mock.ExpectCommit()
+	err := s.repository.Delete(id)
+
+	require.NoError(s.T(), err)
 }
