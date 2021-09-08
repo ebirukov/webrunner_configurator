@@ -50,8 +50,17 @@ func (s taskConfigStore) List() ([]model.TaskConfig, error) {
 	return s.values(), nil
 }
 
-func (s taskConfigStore) Update(config model.TaskConfig) {
-	panic("implement me")
+func (s taskConfigStore) Update(config model.NewConfig, id int64) (*model.TaskConfig, error) {
+	if _, ok := s[id]; ok {
+		v := model.TaskConfig{
+			NewConfig: config,
+			Id:        id,
+		}
+		s[id] = v
+		return &v, nil
+	} else {
+		return nil, TaskConfigNotFound
+	}
 }
 
 func (s taskConfigStore) Delete(id int64) error {

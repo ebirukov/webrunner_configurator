@@ -31,5 +31,11 @@ type TaskConfig struct {
 // AddTaskConfigJSONBody defines parameters for AddTaskConfig.
 type AddTaskConfigJSONBody NewConfig
 
+// UpdateTaskConfigJSONBody defines parameters for UpdateTaskConfig.
+type UpdateTaskConfigJSONBody NewConfig
+
 // AddTaskConfigJSONRequestBody defines body for AddTaskConfig for application/json ContentType.
 type AddTaskConfigJSONRequestBody AddTaskConfigJSONBody
+
+// UpdateTaskConfigJSONRequestBody defines body for UpdateTaskConfig for application/json ContentType.
+type UpdateTaskConfigJSONRequestBody UpdateTaskConfigJSONBody

@@ -9,6 +9,10 @@ type DBTaskConfig struct {
 	Connector *gorm.DB
 }
 
+func (db *DBTaskConfig) Update(config model.NewConfig, id int64) (*model.TaskConfig, error) {
+	panic("implement me")
+}
+
 func (db *DBTaskConfig) Create(config model.NewConfig) (int64, error) {
 	panic("implement me")
 }
@@ -31,10 +35,6 @@ func (db *DBTaskConfig) List() ([]model.TaskConfig, error) {
 	} else {
 		return configs, nil
 	}
-}
-
-func (db *DBTaskConfig) Update(config model.TaskConfig) {
-	panic("implement me")
 }
 
 func (db *DBTaskConfig) Delete(id int64) error {

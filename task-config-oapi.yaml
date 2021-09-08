@@ -28,10 +28,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/OperationError'
     post:
-      description: Add a new task config to database
+      description: Add a new task config to repository
       operationId: addTaskConfig
       requestBody:
-        description: Task config to add to database
+        description: Task config to add to repository
         required: true
         content:
           application/json:
@@ -75,8 +75,39 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/OperationError'
+    post:
+      description: Update a task config by id
+      operationId: updateTaskConfig
+      parameters:
+        - name: id
+          in: path
+          description: id of task config to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Task config to update in repository
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewConfig'
+      responses:
+        '200':
+          description: updated task config response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskConfig'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OperationError'
     delete:
-      description: deletes a task configuration by Id
+      description: deletes a task configuration from repository by Id
       operationId: deleteTaskConfig
       parameters:
         - name: id

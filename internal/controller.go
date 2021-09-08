@@ -29,6 +29,23 @@ func sendError(ctx echo.Context, code int, message string) error {
 	return err
 }
 
+func (h *CRUDHandler) UpdateTaskConfig(ctx echo.Context, id int64) (err error) {
+	var newConfig model.NewConfig
+	err = ctx.Bind(&newConfig)
+	if err != nil {
+		return sendError(ctx, http.StatusBadRequest, "Invalid format for NewConfig")
+	}
+	_, err = h.repository.Update(newConfig, id)
+	if err == simple.TaskConfigNotFound {
+		return sendError(ctx, http.StatusNotFound,
+			fmt.Sprintf("Could not find task config with ID %d", id))
+	}
+	if err != nil {
+		return sendError(ctx, http.StatusUnprocessableEntity, "Can't update task config")
+	}
+	return ctx.JSON(http.StatusOK, model.TaskConfig{NewConfig: newConfig, Id: id})
+}
+
 func (h *CRUDHandler) DeleteTaskConfig(ctx echo.Context, id int64) (err error) {
 	err = h.repository.Delete(id)
 	if err == simple.TaskConfigNotFound {

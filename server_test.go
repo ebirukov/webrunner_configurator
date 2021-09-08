@@ -43,6 +43,11 @@ func TestCRUDHandler(t *testing.T) {
 	result := testutil.NewRequest().Post("/configs").WithJsonBody(newConfig).Go(t, e)
 	// We expect 201 code on successful pet insertion
 	assert.Equal(t, http.StatusCreated, result.Code())
+	var taskConfig = new(model.TaskConfig)
+	err = result.UnmarshalBodyToObject(taskConfig)
+	assert.NoError(t, err, "error unmarshaling response")
+	assert.Equal(t, newConfig, taskConfig.NewConfig)
+	assert.Equal(t, int64(0), taskConfig.Id)
 
 	result = testutil.NewRequest().Get("/configs").Go(t, e)
 	assert.Equal(t, http.StatusOK, result.Code())
@@ -52,11 +57,20 @@ func TestCRUDHandler(t *testing.T) {
 	assert.Equal(t, 1, len(configs))
 
 	id := configs[0].Id
+	result = testutil.NewRequest().Post(fmt.Sprintf("/configs/%d", id)).WithJsonBody(newConfig).Go(t, e)
+	assert.Equal(t, http.StatusOK, result.Code())
+	taskConfig = new(model.TaskConfig)
+	err = result.UnmarshalBodyToObject(taskConfig)
+	assert.NoError(t, err, "error unmarshaling response")
+	assert.Equal(t, model.TaskConfig{NewConfig: newConfig, Id: id}, *taskConfig)
+
 	result = testutil.NewRequest().Delete(fmt.Sprintf("/configs/%d", id)).Go(t, e)
 	assert.Equal(t, http.StatusNoContent, result.Code())
+
+	result = testutil.NewRequest().Post(fmt.Sprintf("/configs/%d", id)).WithJsonBody(newConfig).Go(t, e)
+	assert.Equal(t, http.StatusNotFound, result.Code())
 
 	result = testutil.NewRequest().Delete(fmt.Sprintf("/configs/%d", id)).Go(t, e)
 	assert.Equal(t, http.StatusNotFound, result.Code())
 
-	//:TODO add cases for all methods
 }

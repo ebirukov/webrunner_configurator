@@ -32,6 +32,9 @@ type ServerInterface interface {
 
 	// (GET /configs/{id})
 	FindTaskConfigById(ctx echo.Context, id int64) error
+
+	// (POST /configs/{id})
+	UpdateTaskConfig(ctx echo.Context, id int64) error
 }
 
 // ServerInterfaceWrapper converts echo contexts to parameters.
@@ -89,6 +92,22 @@ func (w *ServerInterfaceWrapper) FindTaskConfigById(ctx echo.Context) error {
 	return err
 }
 
+// UpdateTaskConfig converts echo context to params.
+func (w *ServerInterfaceWrapper) UpdateTaskConfig(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "id" -------------
+	var id int64
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "id", runtime.ParamLocationPath, ctx.Param("id"), &id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.UpdateTaskConfig(ctx, id)
+	return err
+}
+
 // This is a simple interface which specifies echo.Route addition functions which
 // are present on both echo.Echo and echo.Group, since we want to allow using
 // either of them for path registration
@@ -121,25 +140,26 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.POST(baseURL+"/configs", wrapper.AddTaskConfig)
 	router.DELETE(baseURL+"/configs/:id", wrapper.DeleteTaskConfig)
 	router.GET(baseURL+"/configs/:id", wrapper.FindTaskConfigById)
+	router.POST(baseURL+"/configs/:id", wrapper.UpdateTaskConfig)
 
 }
 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/+xWTW/jNhD9K8S0RyFydxfFQqfmYwvk0l0EKXoIchiTI5uJRLLkyKlg6L8XpGzLspSk",
-	"QYsihz2ZEsmZN++9GWsL0tbOGjIcoNhCkGuqMS1/o6dLa0q9ig/OW0eeNaUtiUwr69u45tYRFBDYa7OC",
-	"LgNZNYHJz+9Zw6jNM7uKgpzdCNJrx9+Q17PbjOHxisrZvcZXz9zrMvD0Z6M9KSjuDgeHcMdwRxjus30s",
-	"u3wgyTHPV0ceWVvzxXvrZyiziuJvaX2NDAVowx8/wCGSNkwr8jFUTSHgil6HnGIO5+dg3WJ4HFTEqvpa",
-	"QnG3hR995At+yAf58532+SB8l52WodVpET9/miniBKhWM+Duu3hMm9L2/BhGyXFJNeoKCqCl9s2j3fzi",
-	"yJck2VXYBm6UtmfS1pCBwToG/NKsyLTioj+9N1JUS1sDBZyLy5vfr8T5t2vBa2QhU3GNRyYRtQ4CJetN",
-	"fFy24omWovFVLEpzFeP/QUtx0xhDXlzuriZHbMiHPsNPZ4uzRUxsHRl0Ggr4mF5l4JDXibm8T5vWK0qF",
-	"2r1nrhUU8Ks2apArQKQwOGtCz/yHxWLPE5l0HZ2rtEwB8ocQgez7NynFVKeLL0l9ZI/uIBB6jy0kdcZE",
-	"VjqwsGUibcei2GPsaS+xqfhNMF9Cd9JTM4gaQ385kkxK0HDG2ZAyn9hAKYHC0NMIP1uhkHGJIbbSWJFz",
-	"dSQI9JamwBdWtf9ZjUfNNi3vdgwUlTrBOzQZ+4a6f2mZf+qUKdD37YguO3RfvtWq671REdPUJf37IPDY",
-	"JU2fNI6HazWxyVW6MnKKQ481MfmQpu04hVanTRRF7fHEgQhFmhrDgNNqInV2RNjr0/h+YoxP08qPAfVo",
-	"1Htq6t3MHB+9IW68eVYsPRVrPGUv2qTn2+UqieX6f1PrexunNo5fguQ3e5niv3QBa2ZX5HllJVZrG7j4",
-	"vPi8iF8XfwcAAP//ZQEAhdsKAAA=",
+	"H4sIAAAAAAAC/+xWTW/rNhD8KwTboxC5SVAEOjVfBXJpgiBBD0EONLmymUgku1w5FQz994KUbUmWkjRo",
+	"8Z4P72RaXC5nZ2ZXWnNpS2cNGPI8W3Mvl1CKuPwD3i6tyfUi/HFoHSBpiFtSECws1mFNtQOecU+ozYI3",
+	"CZdF5Qlwes8aEtq8s6vAy8kNL1E7uhO0nNwm4V+vIJ/cq7B451yTcIS/Ko2gePa0C+zS9eEOMDwn21x2",
+	"/gKSwj23DlCQtuYa0eIEZVZB+M0tloJ4xrWhk2O+y6QNwQIwpCrBe7GAzyHHnF38FKwH4V87FUVR3OY8",
+	"e1rznzHwxX9KO/nTjfZpJ3yT7Jeh1X4Rv55OFLEHVKsJcM9NCNMmty0/hoSksIRS6IJnHOYaq1e7+s0B",
+	"5iDJFaL2VCltj6QtecKNKEPC62oBpmYXbfTWSEEtbQ3P+Dm7vH+8Yud3N4yWgpiMxVUoCFjQ2jMhSa/C",
+	"33nN3mDOKixCUZqKkP9PmLP7yhhAdrk5Gh2xAvTtDb8czY5m4WLrwAinecZP4qOEO0HLyFzaXhvXC4iF",
+	"2q1nbhTP+O/aqE4uzwOF3lnjW+aPZ7MtT2DiceFcoWVMkL74AGTbv1EpgjIe/Ejqnj2anUACUdQ8qjMk",
+	"stCemM0jaRsW2RZjS3suqoK+BPMjdHs9NYGoMvC3A0mgGHQxzvp4854NlGKCGXgb4CfLEJz1msI8S/Y0",
+	"OVc9SXhravB0YVX9v1XZa7dxgQ9DqEKpEeKu0QgraP6jbf6tW8ZQD9sVTbLrwHStVdP6owCCsVPa556J",
+	"vlOq9lKWoy17AoSRcaNGxrmKKQbecQJFCQTo4wQeXqnVfmORZRt8YUjyLE6SbuhpNZI+6RH4+YR+Hhnl",
+	"dMxEH1CLRh1So2/m6DD0HqhCMy3evGZ6LNZw8l7UUc+vy5UDyeU3U+tHW3807B+dCu/zgQneUb8NPfhW",
+	"/b4vnqrlU5vDfPe08NSBf5mEKA+42voqfGZmfEnksjQtrBTF0nrKzmZns/B5/E8AAAD//wEYwJmcDQAA",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file
