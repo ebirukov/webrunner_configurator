@@ -32,13 +32,13 @@ func TestCRUDHandler(t *testing.T) {
 	server.RegisterHandlers(e, handler)
 
 	newConfig := model.NewConfig{
-		Category:   new(string),
-		Cluster:    new(string),
-		Container:  "Container",
-		Desc:       new(string),
-		ScriptPath: "ScriptPath",
-		TaskDef:    "TaskDef",
-		UrlPath:    "UrlPath",
+		Category:       new(string),
+		Cluster:        new(string),
+		Container:      "Container",
+		Desc:           new(string),
+		Script:         new(string),
+		Taskdefinition: new(string),
+		Path:           new(string),
 	}
 	result := testutil.NewRequest().Post("/configs").WithJsonBody(newConfig).Go(t, e)
 	// We expect 201 code on successful pet insertion

@@ -5,13 +5,21 @@ package model
 
 // NewConfig defines model for NewConfig.
 type NewConfig struct {
-	Category   *string `json:"category,omitempty"`
-	Cluster    *string `json:"cluster,omitempty"`
-	Container  string  `json:"container"`
-	Desc       *string `json:"desc,omitempty"`
-	ScriptPath string  `json:"scriptPath"`
-	TaskDef    string  `json:"taskDef"`
-	UrlPath    string  `json:"urlPath"`
+	Category *string `json:"category,omitempty"`
+	Cluster  *string `json:"cluster,omitempty"`
+
+	// container name of ecs task
+	Container string  `json:"container"`
+	Desc      *string `json:"desc,omitempty"`
+
+	// url path name that route to execution script result
+	Path *string `json:"path,omitempty"`
+
+	// executed script path
+	Script *string `json:"script,omitempty"`
+
+	// definition name of container task
+	Taskdefinition *string `json:"taskdefinition,omitempty"`
 }
 
 // OperationError defines model for OperationError.

@@ -147,16 +147,20 @@ components:
         - container
         - scriptPath
       properties:
-        urlPath:
+        path:
           type: string
-        taskDef:
+          description: url path name that route to execution script result
+        taskdefinition:
           type: string
+          description: definition name of container task
         container:
           type: string
+          description: container name of ecs task
         category:
           type: string
-        scriptPath:
+        script:
           type: string
+          description: executed script path
         cluster:
           type: string
         desc:
