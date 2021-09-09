@@ -7,16 +7,18 @@ import (
 	"os"
 	controller "webrunner_configurator/internal"
 	"webrunner_configurator/internal/gen/server"
-	"webrunner_configurator/internal/repository/simple"
+	//"webrunner_configurator/internal/repository/simple"
+	db "webrunner_configurator/internal/repository/database/postgres"
 )
 
 func main() {
 	config := controller.NewCommandlineConfig()
-	//repoBuilder := db.NewBuilder(config.DBConfig)
-	repoBuilder := simple.NewBuilder()
+	repoBuilder := db.NewBuilder(config)
+	//repoBuilder := simple.NewBuilder()
 
 	e := echo.New()
 	e.Use(middleware.Logger())
+	e.Use(middleware.KeyAuthWithConfig(config.Security.KeyAuthConfig))
 
 	dbRepository, err := repoBuilder.Build()
 	if err != nil {

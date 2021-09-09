@@ -13,11 +13,12 @@ import (
 )
 
 type Builder struct {
-	config internal.DBConfig
+	config   internal.DBConfig
+	authRole string
 }
 
-func NewBuilder(config internal.DBConfig) *Builder {
-	return &Builder{config: config}
+func NewBuilder(config *internal.Config) *Builder {
+	return &Builder{config: config.DBConfig, authRole: config.Security.AuthRole}
 }
 
 func (b *Builder) Build() (repository.TaskConfigRepository, error) {
@@ -26,7 +27,7 @@ func (b *Builder) Build() (repository.TaskConfigRepository, error) {
 		return nil, err
 	}
 	log.Println("Connection to postgresql was successful")
-	return database.NewDBTaskConfig(db), nil
+	return database.NewDBTaskConfig(db, b.authRole), nil
 }
 
 func (b *Builder) getConnectionString() string {

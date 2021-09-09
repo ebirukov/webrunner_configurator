@@ -36,7 +36,7 @@ func (s *Suite) SetupSuite() {
 
 	s.DB.LogMode(true)
 
-	s.repository = NewDBTaskConfig(s.DB)
+	s.repository = NewDBTaskConfig(s.DB, "analytic")
 }
 
 func (s *Suite) AfterTest(_, _ string) {
@@ -51,7 +51,13 @@ func (s *Suite) Test_repository_Update() {
 	var (
 		config = model.NewConfig{}
 		id     = int64(1)
+		role   = "analytic"
 	)
+	s.mock.ExpectQuery(regexp.QuoteMeta(
+		"SELECT * FROM `restconf` WHERE (id = ? and access like ?)")).
+		WithArgs(id, role).
+		WillReturnRows(sqlmock.NewRows([]string{"id", "role", "newConfig"}).
+			AddRow(id, role, config))
 	s.mock.ExpectBegin()
 	s.mock.ExpectExec(
 		"UPDATE `restconf` SET").
@@ -77,14 +83,15 @@ func (s *Suite) Test_repository_Create() {
 func (s *Suite) Test_repository_Get() {
 	var (
 		id   = int64(1)
+		role = "analytic"
 		name = model.NewConfig{}
 	)
 
 	s.mock.ExpectQuery(regexp.QuoteMeta(
-		"SELECT * FROM `restconf` WHERE (id = ?)")).
-		WithArgs(id).
-		WillReturnRows(sqlmock.NewRows([]string{"id", "newConfig"}).
-			AddRow(id, name))
+		"SELECT * FROM `restconf` WHERE (id = ? and access like ?)")).
+		WithArgs(id, role).
+		WillReturnRows(sqlmock.NewRows([]string{"id", "role", "newConfig"}).
+			AddRow(id, role, name))
 
 	res, err := s.repository.Get(id)
 
