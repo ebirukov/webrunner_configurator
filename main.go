@@ -18,6 +18,7 @@ func main() {
 
 	e := echo.New()
 	e.Use(middleware.Logger())
+	e.Use(middleware.CORS())
 	e.Use(middleware.KeyAuthWithConfig(config.Security.KeyAuthConfig))
 
 	dbRepository, err := repoBuilder.Build()
