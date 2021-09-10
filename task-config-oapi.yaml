@@ -142,17 +142,19 @@ components:
     NewConfig:
       type: object
       required:
-        - urlPath
-        - taskDef
+        - path
+        - taskdefinition
         - container
-        - scriptPath
+        - script
       properties:
         path:
           type: string
           description: url path name that route to execution script result
-        taskdefinition:
+        taskDefinition:
           type: string
           description: definition name of container task
+          x-oapi-codegen-extra-tags:
+            gorm: column:taskDefinition
         container:
           type: string
           description: container name of ecs task

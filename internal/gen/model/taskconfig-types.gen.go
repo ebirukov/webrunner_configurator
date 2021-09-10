@@ -13,13 +13,13 @@ type NewConfig struct {
 	Desc      *string `json:"desc,omitempty"`
 
 	// url path name that route to execution script result
-	Path *string `json:"path,omitempty"`
+	Path string `json:"path"`
 
 	// executed script path
-	Script *string `json:"script,omitempty"`
+	Script string `json:"script"`
 
 	// definition name of container task
-	Taskdefinition *string `json:"taskdefinition,omitempty"`
+	TaskDefinition *string `gorm:"column:taskDefinition" json:"taskDefinition,omitempty"`
 }
 
 // OperationError defines model for OperationError.

@@ -36,9 +36,9 @@ func TestCRUDHandler(t *testing.T) {
 		Cluster:        new(string),
 		Container:      "Container",
 		Desc:           new(string),
-		Script:         new(string),
-		Taskdefinition: new(string),
-		Path:           new(string),
+		Script:         "script",
+		TaskDefinition: new(string),
+		Path:           "Path",
 	}
 	result := testutil.NewRequest().Post("/configs").WithJsonBody(newConfig).Go(t, e)
 	// We expect 201 code on successful pet insertion
