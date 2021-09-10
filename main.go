@@ -8,7 +8,7 @@ import (
 	controller "webrunner_configurator/internal"
 	"webrunner_configurator/internal/gen/server"
 	//"webrunner_configurator/internal/repository/simple"
-	db "webrunner_configurator/internal/repository/database/postgres"
+	db "webrunner_configurator/internal/repository/database/mysql"
 )
 
 func main() {

@@ -32,6 +32,6 @@ func (b *Builder) Build() (repository.TaskConfigRepository, error) {
 func (b *Builder) getConnectionString() string {
 	config := b.config
 	return fmt.Sprintf(
-		"%s:%s@tcp(%s)/%s?charset=utf8mb4&amp;collation=utf8mb4_unicode_ci&amp;parseTime=true&amp;multiStatements=true",
+		"%s:%s@tcp(%s)/%s?charset=utf8mb4&collation=utf8mb4_unicode_ci&parseTime=true&multiStatements=true",
 		config.User, config.Password, config.ServerName, config.DB)
 }
