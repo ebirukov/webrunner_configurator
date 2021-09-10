@@ -75,7 +75,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/OperationError'
-    post:
+    put:
       description: Update a task config by id
       operationId: updateTaskConfig
       parameters:
