@@ -57,7 +57,7 @@ func TestCRUDHandler(t *testing.T) {
 	assert.Equal(t, 1, len(configs))
 
 	id := configs[0].Id
-	result = testutil.NewRequest().Post(fmt.Sprintf("/configs/%d", id)).WithJsonBody(newConfig).Go(t, e)
+	result = testutil.NewRequest().Put(fmt.Sprintf("/configs/%d", id)).WithJsonBody(newConfig).Go(t, e)
 	assert.Equal(t, http.StatusOK, result.Code())
 	taskConfig = new(model.TaskConfig)
 	err = result.UnmarshalBodyToObject(taskConfig)
@@ -67,7 +67,7 @@ func TestCRUDHandler(t *testing.T) {
 	result = testutil.NewRequest().Delete(fmt.Sprintf("/configs/%d", id)).Go(t, e)
 	assert.Equal(t, http.StatusNoContent, result.Code())
 
-	result = testutil.NewRequest().Post(fmt.Sprintf("/configs/%d", id)).WithJsonBody(newConfig).Go(t, e)
+	result = testutil.NewRequest().Put(fmt.Sprintf("/configs/%d", id)).WithJsonBody(newConfig).Go(t, e)
 	assert.Equal(t, http.StatusNotFound, result.Code())
 
 	result = testutil.NewRequest().Delete(fmt.Sprintf("/configs/%d", id)).Go(t, e)
